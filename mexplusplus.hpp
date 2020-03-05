@@ -222,9 +222,15 @@ public:
 };
 
 #define MEX_DEFINE(name) \
-    void mexfunc_##name (Args &output, Args &input); \
-    RegisterMexFunc register_##name(#name, mexfunc_##name); \
-    void mexfunc_##name (Args &output, Args &input)
+	void mexfunc_##name (Args &output, Args &input); \
+	RegisterMexFunc register_##name(#name, mexfunc_##name); \
+	void mexfunc_##name (Args &output, Args &input)
+
+#define MEX_NARGIN(nargin) \
+	if(input.size() <= nargin) \
+		throw matlab::engine::Exception("Not enough input arguments. " +  \
+		                                std::to_string(input.size() - 1) + " given, " + \
+		                                std::to_string(nargin) + " required.");
 
 template<class T>
 std::map<intptr_t, std::shared_ptr<T>> Session<T>::instances = {};
